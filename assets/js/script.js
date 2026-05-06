@@ -5,8 +5,14 @@ const nav = document.querySelector(".site-nav");
 const navLinks = Array.from(document.querySelectorAll(".site-nav a[href^='#']"));
 
 const revealElements = Array.from(document.querySelectorAll(".reveal"));
+const galleryGrid = document.querySelector(".gallery-grid");
 const galleryItems = Array.from(document.querySelectorAll(".gallery-item"));
 const lazyVideos = Array.from(document.querySelectorAll("video[data-lazy-video]"));
+const galleryPrev = document.getElementById("galleryPrev");
+const galleryNext = document.getElementById("galleryNext");
+const galleryCounter = document.getElementById("galleryCounter");
+const typedReviewText = document.getElementById("typedReviewText");
+const typedCursor = document.querySelector(".typed-cursor");
 
 const lightbox = document.getElementById("lightbox");
 const lightboxImage = document.querySelector(".lightbox-image");
@@ -18,6 +24,10 @@ const lightboxNext = document.querySelector(".lightbox-next");
 let activeGalleryIndex = 0;
 let lastFocusedElement = null;
 let ticking = false;
+let isMobileCarousel = false;
+let mobileSlideIndex = 0;
+let mobileRealSlides = [];
+let mobileTransitioning = false;
 
 function syncBodyLock() {
   const menuOpen = Boolean(nav && nav.classList.contains("is-open"));
@@ -154,6 +164,159 @@ function setupGalleryLightbox() {
   });
 }
 
+function setupTypedReviews() {
+  if (!typedReviewText) return;
+  const reviewsRaw = typedReviewText.dataset.reviews || "";
+  const reviews = reviewsRaw
+    .split("||")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  if (!reviews.length) return;
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    typedReviewText.textContent = reviews[0];
+    if (typedCursor) typedCursor.style.display = "none";
+    return;
+  }
+
+  let reviewIndex = 0;
+  let charIndex = 0;
+  let deleting = false;
+
+  const tick = () => {
+    const current = reviews[reviewIndex];
+
+    if (!deleting) {
+      charIndex += 1;
+      typedReviewText.textContent = current.slice(0, charIndex);
+
+      if (charIndex >= current.length) {
+        deleting = true;
+        window.setTimeout(tick, 1600);
+        return;
+      }
+
+      window.setTimeout(tick, 28);
+      return;
+    }
+
+    charIndex -= 1;
+    typedReviewText.textContent = current.slice(0, Math.max(charIndex, 0));
+
+    if (charIndex <= 0) {
+      deleting = false;
+      reviewIndex = (reviewIndex + 1) % reviews.length;
+      window.setTimeout(tick, 300);
+      return;
+    }
+
+    window.setTimeout(tick, 16);
+  };
+
+  typedReviewText.textContent = "";
+  tick();
+}
+
+function updateMobileCounter() {
+  if (!galleryCounter || !mobileRealSlides.length) return;
+  const visibleIndex = ((mobileSlideIndex - 1 + mobileRealSlides.length) % mobileRealSlides.length) + 1;
+  galleryCounter.textContent = `${visibleIndex} / ${mobileRealSlides.length}`;
+}
+
+function setMobileSlidePosition({ withTransition }) {
+  if (!galleryGrid) return;
+  galleryGrid.style.transition = withTransition ? "transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1)" : "none";
+  galleryGrid.style.transform = `translateX(-${mobileSlideIndex * 100}%)`;
+}
+
+function teardownMobileCarousel() {
+  if (!galleryGrid || !isMobileCarousel) return;
+
+  galleryGrid.querySelectorAll(".gallery-item.is-clone").forEach((cloneNode) => cloneNode.remove());
+  galleryGrid.style.transform = "";
+  galleryGrid.style.transition = "";
+  mobileSlideIndex = 0;
+  mobileRealSlides = [];
+  mobileTransitioning = false;
+  isMobileCarousel = false;
+
+  if (galleryCounter) galleryCounter.textContent = `1 / ${galleryItems.length}`;
+}
+
+function initMobileCarousel() {
+  if (!galleryGrid || galleryItems.length < 2 || isMobileCarousel) return;
+
+  mobileRealSlides = Array.from(galleryGrid.querySelectorAll(".gallery-item:not(.is-clone)"));
+  const firstClone = mobileRealSlides[0].cloneNode(true);
+  const lastClone = mobileRealSlides[mobileRealSlides.length - 1].cloneNode(true);
+  firstClone.classList.add("is-clone");
+  lastClone.classList.add("is-clone");
+  firstClone.classList.remove("reveal");
+  lastClone.classList.remove("reveal");
+  firstClone.classList.add("is-visible");
+  lastClone.classList.add("is-visible");
+
+  galleryGrid.insertBefore(lastClone, mobileRealSlides[0]);
+  galleryGrid.append(firstClone);
+
+  isMobileCarousel = true;
+  mobileSlideIndex = 1;
+  setMobileSlidePosition({ withTransition: false });
+  updateMobileCounter();
+}
+
+function handleGalleryStep(direction) {
+  if (!isMobileCarousel || mobileTransitioning || !galleryGrid || mobileRealSlides.length < 2) return;
+
+  mobileTransitioning = true;
+  mobileSlideIndex += direction;
+  setMobileSlidePosition({ withTransition: true });
+  updateMobileCounter();
+}
+
+function handleCarouselTransitionEnd(event) {
+  if (!isMobileCarousel || event.propertyName !== "transform" || event.target !== galleryGrid) return;
+
+  const total = mobileRealSlides.length;
+  if (mobileSlideIndex === 0) {
+    mobileSlideIndex = total;
+    setMobileSlidePosition({ withTransition: false });
+  } else if (mobileSlideIndex === total + 1) {
+    mobileSlideIndex = 1;
+    setMobileSlidePosition({ withTransition: false });
+  }
+
+  mobileTransitioning = false;
+  updateMobileCounter();
+}
+
+function setupMobileGalleryCarousel() {
+  if (!galleryGrid || !galleryPrev || !galleryNext) return;
+
+  const mobileQuery = window.matchMedia("(max-width: 759px)");
+
+  const syncMode = () => {
+    if (mobileQuery.matches) {
+      initMobileCarousel();
+    } else {
+      teardownMobileCarousel();
+    }
+  };
+
+  syncMode();
+
+  if (mobileQuery.addEventListener) {
+    mobileQuery.addEventListener("change", syncMode);
+  } else {
+    mobileQuery.addListener(syncMode);
+  }
+
+  galleryGrid.addEventListener("transitionend", handleCarouselTransitionEnd);
+  galleryPrev.addEventListener("click", () => handleGalleryStep(-1));
+  galleryNext.addEventListener("click", () => handleGalleryStep(1));
+}
+
 function setupLazyVideos() {
   if (!lazyVideos.length) return;
 
@@ -230,6 +393,8 @@ document.addEventListener("keydown", (event) => {
 
 setupRevealObserver();
 setupGalleryLightbox();
+setupTypedReviews();
+setupMobileGalleryCarousel();
 setupLazyVideos();
 onScroll();
 
