@@ -175,20 +175,32 @@ function setupTypedReviews() {
 
   if (!reviews.length) return;
 
-  if (
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-    window.matchMedia("(max-width: 979px)").matches
-  ) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     typedReviewText.textContent = reviews[0];
     if (typedCursor) typedCursor.style.display = "none";
     return;
   }
 
+  if (typedCursor) typedCursor.style.display = "";
+
   let reviewIndex = 0;
   let charIndex = 0;
   let deleting = false;
+  let timerId = null;
+  let hasStarted = false;
+  const compactViewport = window.matchMedia("(max-width: 759px)").matches;
+  const typeDelay = compactViewport ? 36 : 28;
+  const deleteDelay = compactViewport ? 22 : 16;
+
+  const setTickTimeout = (delay) => {
+    if (timerId) window.clearTimeout(timerId);
+    timerId = window.setTimeout(tick, delay);
+  };
 
   const tick = () => {
+    timerId = null;
+    if (document.hidden) return;
+
     const current = reviews[reviewIndex];
 
     if (!deleting) {
@@ -197,11 +209,11 @@ function setupTypedReviews() {
 
       if (charIndex >= current.length) {
         deleting = true;
-        window.setTimeout(tick, 1600);
+        setTickTimeout(1600);
         return;
       }
 
-      window.setTimeout(tick, 28);
+      setTickTimeout(typeDelay);
       return;
     }
 
@@ -211,15 +223,52 @@ function setupTypedReviews() {
     if (charIndex <= 0) {
       deleting = false;
       reviewIndex = (reviewIndex + 1) % reviews.length;
-      window.setTimeout(tick, 300);
+      setTickTimeout(300);
       return;
     }
 
-    window.setTimeout(tick, 16);
+    setTickTimeout(deleteDelay);
   };
 
-  typedReviewText.textContent = "";
-  tick();
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      if (timerId) window.clearTimeout(timerId);
+      timerId = null;
+      return;
+    }
+
+    if (hasStarted && !document.hidden && !timerId) {
+      setTickTimeout(120);
+    }
+  });
+
+  const startTyping = () => {
+    if (hasStarted) return;
+    hasStarted = true;
+    typedReviewText.textContent = "";
+    tick();
+  };
+
+  if (!("IntersectionObserver" in window)) {
+    startTyping();
+    return;
+  }
+
+  const starterObserver = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        startTyping();
+        observer.unobserve(entry.target);
+      });
+    },
+    {
+      threshold: 0.22,
+      rootMargin: "0px 0px -10% 0px"
+    }
+  );
+
+  starterObserver.observe(typedReviewText);
 }
 
 function updateMobileCounter() {

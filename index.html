@@ -43,7 +43,7 @@
 
   <main>
     <section class="hero" id="home">
-      <video class="hero-video" id="heroVideo" autoplay muted loop playsinline poster="assets/img/pescariello_osteriadipesce_1749227400_3649106735260225130_62580865731.jpg">
+      <video class="hero-video" id="heroVideo" autoplay muted loop playsinline preload="metadata" poster="assets/img/pescariello_osteriadipesce_1749227400_3649106735260225130_62580865731.jpg">
         <source src="assets/video/prova enanched cutted.mp4" type="video/mp4">
       </video>
       <div class="hero-overlay"></div>
@@ -55,7 +55,7 @@
         <p class="hero-subtitle">Cucina italiana di pesce, atmosfera viva e tavolate piene. In più, un'esperienza AYCE dedicata con menu separato.</p>
 
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#prenota">Prenota Ora</a>
+          <a class="btn btn-primary" href="https://wa.me/393297680006?text=Ciao%20Pescariello!%20Vorrei%20prenotare%20un%20tavolo." target="_blank" rel="noopener noreferrer">Prenota Ora</a>
           <a class="btn btn-secondary" href="#ayce-dedicato">Guarda il Menu</a>
         </div>
 
@@ -198,7 +198,6 @@
           <h2>Una formula in più, dentro un'esperienza completa</h2>
           <p>Qui trovi prima di tutto un ristorante di mare contemporaneo, con cucina italiana e piatti premium alla carta.</p>
           <p>In aggiunta, offriamo anche un'esperienza All You Can Eat dedicata, con menu separato pensato per chi vuole vivere il mare senza limiti.</p>
-          <a class="btn btn-primary" href="#prenota">Scopri e Prenota</a>
         </article>
       </div>
     </section>
@@ -261,8 +260,8 @@
 
         <div class="video-grid">
           <article class="video-card reveal">
-            <video class="teaser-video" data-lazy-video data-start-at="4" data-cut-tail="0.5" data-playback-rate="0.84" muted loop playsinline preload="none" poster="assets/img/pescariello_osteriadipesce_1754047800_3689542999305948376_62580865731.jpg">
-              <source data-src="assets/video/videoedit.mp4" type="video/mp4">
+            <video class="teaser-video" data-lazy-video data-cut-tail="0.5" muted loop playsinline preload="none" poster="assets/img/pescariello_osteriadipesce_1754047800_3689542999305948376_62580865731.jpg">
+              <source data-src="assets/video/pescariello_osteriadipesce_1757850408_3721441246431745289_62580865731.mp4" type="video/mp4">
             </video>
             <div class="video-copy">
               <h3>Servizio in movimento</h3>
@@ -271,7 +270,7 @@
           </article>
 
           <article class="video-card reveal">
-            <video class="teaser-video" data-lazy-video data-cut-tail="3" muted loop playsinline preload="none" poster="assets/img/pescariello_osteriadipesce_1746090028_3622788187244712790_62580865731.jpg">
+            <video class="teaser-video" data-lazy-video data-cut-tail="0.5" muted loop playsinline preload="none" poster="assets/img/pescariello_osteriadipesce_1746090028_3622788187244712790_62580865731.jpg">
               <source data-src="assets/video/pescariello_osteriadipesce_1776427040_3877273310585546717_62580865731.mp4" type="video/mp4">
             </video>
             <div class="video-copy">
@@ -281,12 +280,12 @@
           </article>
 
           <article class="video-card reveal">
-            <video class="teaser-video" data-lazy-video data-cut-tail="4" muted loop playsinline preload="none" poster="assets/img/pescariello_osteriadipesce_1751113800_3664931103418503497_62580865731.jpg">
-              <source data-src="assets/video/pescariello_osteriadipesce_1757850408_3721441246431745289_62580865731.mp4" type="video/mp4">
+            <video class="teaser-video" data-lazy-video data-start-at="6" data-cut-tail="0.5" muted loop playsinline preload="none" poster="assets/img/pescariello_osteriadipesce_1749227400_3649106735260225130_62580865731.jpg">
+              <source data-src="assets/video/ifpviterbo_1765457525_3785253124714627648_3142074063.mp4" type="video/mp4">
             </video>
             <div class="video-copy">
-              <h3>Atmosfera serale</h3>
-              <p>Luci morbide, convivialità e scenografia perfetta per la tua serata.</p>
+              <h3>Atmosfera locale</h3>
+              <p>Scene reali di sala, ritmo del servizio e vibe autentica del locale.</p>
             </div>
           </article>
         </div>
@@ -312,22 +311,18 @@
           <article class="booking-info-card booking-map-card">
             <h3>Dove Siamo</h3>
             <div class="map-placeholder map-embed">
+              <a class="map-overlay-link" href="https://www.google.com/maps/search/?api=1&query=Pescariello+Osteria+di+Pesce+Via+Falcone+e+Borsellino+37+Viterbo" target="_blank" rel="noopener noreferrer" aria-label="Apri la posizione del locale su Google Maps"></a>
               <iframe
                 title="Mappa Pescariello Osteria di Pesce"
-                src="https://www.google.com/maps?q=42.428308,12.0938665&z=17&output=embed"
+                src="https://www.google.com/maps?q=Pescariello+Osteria+di+Pesce+Via+Falcone+e+Borsellino+37+Viterbo&z=17&output=embed"
                 loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"
                 allowfullscreen></iframe>
             </div>
-            <p><a class="map-link" href="https://www.google.com/maps/place/Pescariello+-+Osteria+di+Pesce/@42.4283119,12.0912916,17z/data=!3m1!4b1!4m6!3m5!1s0x132f2d7ef7c37f33:0xa2c05d99112f6ed2!8m2!3d42.428308!4d12.0938665!16s%2Fg%2F11vj1bb1v7?authuser=0&hl=it&entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer">Apri su Google Maps</a></p>
+            <p><a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Pescariello+Osteria+di+Pesce+Via+Falcone+e+Borsellino+37+Viterbo" target="_blank" rel="noopener noreferrer">Apri su Google Maps</a></p>
           </article>
         </div>
 
-        <div class="booking-fish-decor" aria-hidden="true">
-          <img class="booking-fish fish-a" src="assets/img/fish-single.png" alt="" loading="lazy" decoding="async">
-          <img class="booking-fish fish-b" src="assets/img/fish-single.png" alt="" loading="lazy" decoding="async">
-          <img class="booking-fish fish-c" src="assets/img/fish-single.png" alt="" loading="lazy" decoding="async">
-        </div>
       </div>
     </section>
   </main>
