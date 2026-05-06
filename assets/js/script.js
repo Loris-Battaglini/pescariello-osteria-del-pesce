@@ -175,7 +175,10 @@ function setupTypedReviews() {
 
   if (!reviews.length) return;
 
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+    window.matchMedia("(max-width: 979px)").matches
+  ) {
     typedReviewText.textContent = reviews[0];
     if (typedCursor) typedCursor.style.display = "none";
     return;
@@ -310,28 +313,16 @@ function setupMobileGalleryCarousel() {
 
 function setupHeroVideoPlayback() {
   if (!heroVideo) return;
+  const targetRate = 0.74;
 
-  const maxPlays = Number(heroVideo.dataset.maxPlays || "2");
-  if (!Number.isFinite(maxPlays) || maxPlays <= 0) return;
+  const applyRate = () => {
+    heroVideo.playbackRate = targetRate;
+  };
 
-  let completedRuns = 0;
-
-  heroVideo.addEventListener("ended", () => {
-    completedRuns += 1;
-
-    if (completedRuns < maxPlays) {
-      heroVideo.currentTime = 0;
-      heroVideo.play().catch(() => {});
-      return;
-    }
-
-    const freezeTime = Number.isFinite(heroVideo.duration)
-      ? Math.max(0, heroVideo.duration - 0.05)
-      : heroVideo.currentTime;
-
-    heroVideo.currentTime = freezeTime;
-    heroVideo.pause();
-  });
+  heroVideo.loop = true;
+  applyRate();
+  heroVideo.addEventListener("loadedmetadata", applyRate);
+  heroVideo.addEventListener("play", applyRate);
 }
 
 function setupTrimmedVideoLoop(videoElement) {

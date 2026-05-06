@@ -90,10 +90,11 @@ video {
   font-size: 0.78rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #f4e6ce;
-  border: 1px solid rgba(234, 215, 176, 0.32);
+  color: #ffe9be;
+  border: 1px solid rgba(248, 216, 152, 0.72);
   border-radius: 999px;
-  background: rgba(213, 195, 160, 0.1);
+  background: linear-gradient(112deg, rgba(237, 184, 101, 0.34), rgba(187, 133, 63, 0.24));
+  box-shadow: inset 0 0 0 1px rgba(255, 228, 177, 0.28), 0 8px 16px rgba(77, 52, 20, 0.16);
 }
 
 .section-head h2 {
@@ -104,6 +105,16 @@ video {
 .section-head p {
   color: var(--muted);
   font-size: 1.04rem;
+}
+
+.social-proof,
+.experience,
+.ayce-dedicato,
+.gallery,
+.video-section,
+.booking-cta {
+  content-visibility: auto;
+  contain-intrinsic-size: 900px;
 }
 
 .btn {
@@ -184,13 +195,14 @@ video {
   overflow: hidden;
   background: rgba(17, 37, 56, 0.62);
   border: 1px solid rgba(236, 221, 192, 0.28);
-  padding: 0.2rem;
+  padding: 0.04rem;
 }
 
 .brand-mark img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  transform: scale(1.22);
   filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
 }
 
@@ -239,8 +251,10 @@ video {
   min-height: 2.6rem;
   padding: 0.65rem 1rem;
   font-size: 0.86rem;
-  color: #082135;
-  background: linear-gradient(120deg, #f3e8d5, #ceb189);
+  color: #f7fff8;
+  background: linear-gradient(120deg, #0f9056, #14b86d);
+  border: 1px solid rgba(230, 255, 240, 0.28);
+  box-shadow: 0 10px 20px rgba(12, 108, 66, 0.28);
 }
 
 .menu-toggle {
@@ -287,6 +301,7 @@ video {
   inset: 0;
   height: 100%;
   object-fit: cover;
+  object-position: center 34%;
 }
 
 .hero-overlay {
@@ -343,27 +358,6 @@ video {
   max-width: 34ch;
   font-size: clamp(1rem, 2.8vw, 1.3rem);
   color: rgba(246, 239, 228, 0.92);
-}
-
-.hero-fish {
-  position: absolute;
-  z-index: 1;
-  width: clamp(84px, 13vw, 180px);
-  opacity: 0.24;
-  pointer-events: none;
-  filter: drop-shadow(0 8px 20px rgba(3, 9, 17, 0.4));
-}
-
-.hero-fish-top {
-  right: clamp(2%, 4vw, 8%);
-  top: calc(var(--header-height) + 3%);
-  transform: rotate(8deg);
-}
-
-.hero-fish-bottom {
-  left: clamp(2%, 5vw, 8%);
-  bottom: clamp(7%, 11vw, 16%);
-  transform: rotate(-10deg);
 }
 
 .hero-actions {
@@ -434,9 +428,35 @@ video {
 }
 
 .social-proof {
+  position: relative;
+  overflow: clip;
   background:
     linear-gradient(180deg, rgba(20, 44, 67, 0.72), rgba(16, 35, 54, 0.42)),
     radial-gradient(900px circle at 85% 20%, rgba(214, 195, 158, 0.22), transparent 58%);
+}
+
+.social-proof::before,
+.social-proof::after {
+  content: "";
+  position: absolute;
+  width: clamp(72px, 8vw, 118px);
+  aspect-ratio: 1;
+  pointer-events: none;
+  opacity: 0.16;
+  background: url("../img/fish-single.png") center / contain no-repeat;
+  filter: none;
+}
+
+.social-proof::before {
+  top: 16%;
+  right: 5%;
+  transform: rotate(-9deg);
+}
+
+.social-proof::after {
+  left: 4%;
+  bottom: 10%;
+  transform: rotate(9deg);
 }
 
 .proof-badges {
@@ -476,6 +496,8 @@ video {
   font-size: clamp(1.65rem, 5vw, 2.25rem);
   line-height: 1;
   margin-bottom: 0.35rem;
+  color: #f2d39d;
+  text-shadow: 0 7px 16px rgba(72, 49, 22, 0.22);
 }
 
 .proof-metrics span {
@@ -532,8 +554,8 @@ video {
 }
 
 .social-link img {
-  width: 1rem;
-  height: 1rem;
+  width: 1.6rem;
+  height: 1.6rem;
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -578,14 +600,14 @@ video {
 .experience-list {
   display: grid;
   gap: 1rem;
-  max-width: 1010px;
+  max-width: 1140px;
   margin-inline: auto;
 }
 
 .experience-item {
   display: grid;
-  gap: 1rem;
-  padding: 0.85rem;
+  gap: 0.72rem;
+  padding: 0.66rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 1.35rem;
   background: linear-gradient(160deg, rgba(24, 45, 67, 0.88), rgba(19, 39, 58, 0.75));
@@ -596,7 +618,7 @@ video {
   margin: 0;
   border-radius: 1rem;
   overflow: hidden;
-  min-height: 210px;
+  min-height: 150px;
 }
 
 .experience-media img {
@@ -615,12 +637,12 @@ video {
 }
 
 .experience-copy h3 {
-  font-size: clamp(1.34rem, 3.6vw, 1.82rem);
+  font-size: clamp(1.12rem, 3.2vw, 1.55rem);
 }
 
 .experience-copy p {
   color: var(--muted);
-  font-size: 0.97rem;
+  font-size: 0.9rem;
 }
 
 .menu-highlights {
@@ -651,32 +673,6 @@ video {
   background:
     linear-gradient(160deg, rgba(23, 50, 75, 0.72), rgba(18, 38, 57, 0.48)),
     radial-gradient(860px circle at 8% 50%, rgba(215, 197, 158, 0.16), transparent 60%);
-}
-
-.ayce-dedicato::before,
-.ayce-dedicato::after {
-  content: "";
-  position: absolute;
-  width: clamp(92px, 14vw, 180px);
-  aspect-ratio: 1;
-  pointer-events: none;
-  opacity: 0.2;
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-image: url("../img/pesci%20no%20background.png");
-  filter: drop-shadow(0 8px 20px rgba(5, 14, 24, 0.3));
-}
-
-.ayce-dedicato::before {
-  top: 7%;
-  right: 5%;
-  transform: rotate(-8deg);
-}
-
-.ayce-dedicato::after {
-  left: 4%;
-  bottom: 9%;
-  transform: rotate(10deg);
 }
 
 .ayce-layout {
@@ -824,6 +820,25 @@ video {
   aspect-ratio: 4 / 5;
 }
 
+.video-section {
+  position: relative;
+  overflow: clip;
+}
+
+.video-section::after {
+  content: "";
+  position: absolute;
+  top: 8%;
+  right: 6%;
+  width: clamp(66px, 7vw, 100px);
+  aspect-ratio: 1;
+  opacity: 0.14;
+  pointer-events: none;
+  transform: rotate(-6deg);
+  background: url("../img/fish-single.png") center / contain no-repeat;
+  filter: none;
+}
+
 .video-grid {
   display: grid;
   gap: 1rem;
@@ -863,11 +878,20 @@ video {
 }
 
 .booking-cta .container {
+  position: relative;
+  overflow: hidden;
   padding: clamp(2rem, 6vw, 3.6rem);
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(245, 225, 190, 0.24);
-  background: rgba(19, 38, 57, 0.64);
+  border: 1px solid rgba(245, 225, 190, 0.3);
+  background:
+    linear-gradient(140deg, rgba(24, 50, 76, 0.82), rgba(18, 37, 56, 0.76)),
+    radial-gradient(800px circle at 16% 16%, rgba(225, 183, 112, 0.14), transparent 70%);
   box-shadow: var(--shadow);
+}
+
+.booking-cta .container > * {
+  position: relative;
+  z-index: 2;
 }
 
 .booking-cta h2 {
@@ -892,13 +916,16 @@ video {
   margin-top: 1.4rem;
   display: grid;
   gap: 0.85rem;
+  grid-template-columns: 1fr;
 }
 
 .booking-info-card {
+  position: relative;
+  z-index: 2;
   padding: 0.95rem 1rem;
   border-radius: 1rem;
-  border: 1px solid rgba(245, 225, 190, 0.2);
-  background: rgba(20, 40, 60, 0.58);
+  border: 1px solid rgba(245, 225, 190, 0.24);
+  background: rgba(23, 46, 69, 0.66);
 }
 
 .booking-info-card h3 {
@@ -921,6 +948,44 @@ video {
 
 .booking-map-card .map-embed {
   margin-top: 0.5rem;
+}
+
+.booking-fish-decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.booking-fish {
+  position: absolute;
+  width: clamp(88px, 10vw, 136px);
+  opacity: 0.2;
+  filter: none;
+}
+
+.booking-fish.fish-a {
+  top: 6%;
+  right: 7%;
+  transform: rotate(-8deg);
+}
+
+.booking-fish.fish-b {
+  top: 34%;
+  left: 2.5%;
+  transform: rotate(6deg);
+}
+
+.booking-fish.fish-c {
+  bottom: 10%;
+  right: 26%;
+  transform: rotate(-6deg);
+}
+
+.booking-fish.fish-d {
+  bottom: 5%;
+  left: 16%;
+  transform: rotate(8deg);
 }
 
 .btn-whatsapp {
@@ -1133,7 +1198,7 @@ video {
   }
 
   .booking-info-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 0.9fr 1.1fr;
   }
 
   .footer-grid {
@@ -1143,10 +1208,10 @@ video {
 
 @media (min-width: 980px) {
   .experience-item {
-    grid-template-columns: 1.04fr 0.96fr;
+    grid-template-columns: 1.24fr 0.76fr;
     align-items: stretch;
-    gap: 1rem;
-    padding: 0.9rem;
+    gap: 0.8rem;
+    padding: 0.68rem;
   }
 
   .experience-item:nth-child(even) .experience-media {
@@ -1170,7 +1235,7 @@ video {
   }
 
   .booking-info-grid {
-    grid-template-columns: 0.9fr 0.9fr 1.2fr;
+    grid-template-columns: 0.85fr 1.15fr;
     align-items: start;
   }
 
@@ -1204,7 +1269,8 @@ video {
     left: 4vw;
     right: 4vw;
     max-height: 0;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     flex-direction: column;
     align-items: stretch;
     gap: 0.35rem;
@@ -1217,8 +1283,8 @@ video {
   }
 
   .site-nav.is-open {
-    max-height: 360px;
-    padding: 0.6rem;
+    max-height: 540px;
+    padding: 0.7rem;
   }
 
   .site-nav > a {
@@ -1227,7 +1293,8 @@ video {
   }
 
   .btn-nav {
-    margin: 0.1rem 0 0;
+    margin: 0.14rem 0 0;
+    text-align: center;
   }
 
   .hero-stats {
@@ -1312,6 +1379,32 @@ video {
 
   .booking-cta .container {
     padding-bottom: 3.2rem;
+  }
+
+  .booking-fish {
+    width: clamp(72px, 18vw, 104px);
+    opacity: 0.16;
+  }
+
+  .booking-fish.fish-c,
+  .booking-fish.fish-d {
+    display: none;
+  }
+
+  .hero-video {
+    object-position: center 42%;
+  }
+}
+
+@media (hover: none) {
+  .experience-item:hover .experience-media img {
+    transform: scale(1.01);
+  }
+
+  .gallery-item:hover img,
+  .gallery-item:focus-visible img {
+    transform: none;
+    filter: none;
   }
 }
 
