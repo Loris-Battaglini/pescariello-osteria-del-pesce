@@ -25,9 +25,9 @@ let activeGalleryIndex = 0;
 let lastFocusedElement = null;
 let ticking = false;
 let isMobileCarousel = false;
-let mobileSlideIndex = 0;
-let mobileRealSlides = [];
-let mobileTransitioning = false;
+let mobileActiveIndex = 0;
+let mobileSlides = [];
+let mobileStepLocked = false;
 
 function syncBodyLock() {
   const menuOpen = Boolean(nav && nav.classList.contains("is-open"));
@@ -219,76 +219,67 @@ function setupTypedReviews() {
 }
 
 function updateMobileCounter() {
-  if (!galleryCounter || !mobileRealSlides.length) return;
-  const visibleIndex = ((mobileSlideIndex - 1 + mobileRealSlides.length) % mobileRealSlides.length) + 1;
-  galleryCounter.textContent = `${visibleIndex} / ${mobileRealSlides.length}`;
+  if (!galleryCounter || !mobileSlides.length) return;
+  galleryCounter.textContent = `${mobileActiveIndex + 1} / ${mobileSlides.length}`;
 }
 
-function setMobileSlidePosition({ withTransition }) {
-  if (!galleryGrid) return;
-  galleryGrid.style.transition = withTransition ? "transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1)" : "none";
-  galleryGrid.style.transform = `translateX(-${mobileSlideIndex * 100}%)`;
+function setMobileActiveSlide(nextIndex) {
+  if (!mobileSlides.length) return;
+
+  const total = mobileSlides.length;
+  mobileActiveIndex = (nextIndex + total) % total;
+
+  mobileSlides.forEach((item, index) => {
+    const isActive = index === mobileActiveIndex;
+    item.classList.toggle("is-active", isActive);
+    item.setAttribute("aria-hidden", String(!isActive));
+    if (isActive) {
+      item.removeAttribute("tabindex");
+    } else {
+      item.setAttribute("tabindex", "-1");
+    }
+  });
+
+  updateMobileCounter();
 }
 
 function teardownMobileCarousel() {
   if (!galleryGrid || !isMobileCarousel) return;
 
-  galleryGrid.querySelectorAll(".gallery-item.is-clone").forEach((cloneNode) => cloneNode.remove());
-  galleryGrid.style.transform = "";
-  galleryGrid.style.transition = "";
-  mobileSlideIndex = 0;
-  mobileRealSlides = [];
-  mobileTransitioning = false;
+  mobileSlides.forEach((item) => {
+    item.classList.remove("is-active");
+    item.removeAttribute("aria-hidden");
+    item.removeAttribute("tabindex");
+  });
+
+  mobileSlides = [];
+  mobileActiveIndex = 0;
+  mobileStepLocked = false;
   isMobileCarousel = false;
 
   if (galleryCounter) galleryCounter.textContent = `1 / ${galleryItems.length}`;
 }
 
 function initMobileCarousel() {
-  if (!galleryGrid || galleryItems.length < 2 || isMobileCarousel) return;
+  if (!galleryGrid || isMobileCarousel) return;
 
-  mobileRealSlides = Array.from(galleryGrid.querySelectorAll(".gallery-item:not(.is-clone)"));
-  const firstClone = mobileRealSlides[0].cloneNode(true);
-  const lastClone = mobileRealSlides[mobileRealSlides.length - 1].cloneNode(true);
-  firstClone.classList.add("is-clone");
-  lastClone.classList.add("is-clone");
-  firstClone.classList.remove("reveal");
-  lastClone.classList.remove("reveal");
-  firstClone.classList.add("is-visible");
-  lastClone.classList.add("is-visible");
-
-  galleryGrid.insertBefore(lastClone, mobileRealSlides[0]);
-  galleryGrid.append(firstClone);
+  mobileSlides = Array.from(galleryGrid.querySelectorAll(".gallery-item"));
+  if (mobileSlides.length < 2) return;
 
   isMobileCarousel = true;
-  mobileSlideIndex = 1;
-  setMobileSlidePosition({ withTransition: false });
-  updateMobileCounter();
+  mobileActiveIndex = 0;
+  setMobileActiveSlide(mobileActiveIndex);
 }
 
 function handleGalleryStep(direction) {
-  if (!isMobileCarousel || mobileTransitioning || !galleryGrid || mobileRealSlides.length < 2) return;
+  if (!isMobileCarousel || !mobileSlides.length || mobileStepLocked) return;
 
-  mobileTransitioning = true;
-  mobileSlideIndex += direction;
-  setMobileSlidePosition({ withTransition: true });
-  updateMobileCounter();
-}
+  mobileStepLocked = true;
+  setMobileActiveSlide(mobileActiveIndex + direction);
 
-function handleCarouselTransitionEnd(event) {
-  if (!isMobileCarousel || event.propertyName !== "transform" || event.target !== galleryGrid) return;
-
-  const total = mobileRealSlides.length;
-  if (mobileSlideIndex === 0) {
-    mobileSlideIndex = total;
-    setMobileSlidePosition({ withTransition: false });
-  } else if (mobileSlideIndex === total + 1) {
-    mobileSlideIndex = 1;
-    setMobileSlidePosition({ withTransition: false });
-  }
-
-  mobileTransitioning = false;
-  updateMobileCounter();
+  window.setTimeout(() => {
+    mobileStepLocked = false;
+  }, 220);
 }
 
 function setupMobileGalleryCarousel() {
@@ -312,7 +303,6 @@ function setupMobileGalleryCarousel() {
     mobileQuery.addListener(syncMode);
   }
 
-  galleryGrid.addEventListener("transitionend", handleCarouselTransitionEnd);
   galleryPrev.addEventListener("click", () => handleGalleryStep(-1));
   galleryNext.addEventListener("click", () => handleGalleryStep(1));
 }
