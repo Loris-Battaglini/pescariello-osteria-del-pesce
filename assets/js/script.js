@@ -86,7 +86,11 @@ function markRevealed(entries, observer) {
 }
 
 function setupRevealObserver() {
-  if (!("IntersectionObserver" in window) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (
+    !("IntersectionObserver" in window) ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+    window.matchMedia("(max-width: 979px)").matches
+  ) {
     revealElements.forEach((element) => element.classList.add("is-visible"));
     return;
   }

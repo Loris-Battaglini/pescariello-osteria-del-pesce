@@ -1359,6 +1359,27 @@ video {
 }
 
 @media (max-width: 979px) {
+  .social-proof,
+  .experience,
+  .ayce-dedicato,
+  .gallery,
+  .video-section,
+  .booking-cta {
+    content-visibility: visible;
+    contain-intrinsic-size: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .site-header.is-scrolled,
+  .section-kicker {
+    backdrop-filter: none;
+  }
+
   .menu-toggle {
     display: inline-flex;
   }
@@ -1468,15 +1489,15 @@ video {
     width: 100%;
     border-radius: 1rem;
     opacity: 0;
-    transform: translate3d(0, 12px, 0);
-    transition: opacity 0.32s ease, transform 0.32s ease;
+    transform: none;
+    transition: none;
     pointer-events: none;
     contain: paint;
   }
 
   .gallery-grid .gallery-item.is-active {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
+    transform: none;
     pointer-events: auto;
     z-index: 2;
   }
@@ -1497,7 +1518,7 @@ video {
   .gallery-grid .gallery-item::after {
     opacity: 0;
     transform: none;
-    transition: opacity 0.25s ease;
+    transition: none;
   }
 
   .gallery-grid .gallery-item.is-active::before,
