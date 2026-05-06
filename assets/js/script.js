@@ -329,18 +329,62 @@ function setupTrimmedVideoLoop(videoElement) {
   if (!videoElement || videoElement.dataset.trimBound === "true") return;
 
   const cutTail = Number(videoElement.dataset.cutTail || "0");
-  if (!Number.isFinite(cutTail) || cutTail <= 0) return;
+  const startAt = Number(videoElement.dataset.startAt || "0");
+  const playbackRate = Number(videoElement.dataset.playbackRate || "1");
+
+  const hasCutTail = Number.isFinite(cutTail) && cutTail > 0;
+  const hasStartOffset = Number.isFinite(startAt) && startAt > 0;
+  if (!hasCutTail && !hasStartOffset) return;
 
   videoElement.dataset.trimBound = "true";
+  videoElement.loop = false;
+
+  const restartFrom = () => {
+    if (!Number.isFinite(videoElement.duration) || videoElement.duration <= 0) return 0.03;
+
+    if (!hasStartOffset) return 0.03;
+
+    const maxStart = Math.max(0.03, videoElement.duration - (hasCutTail ? cutTail + 0.3 : 0.35));
+    return Math.min(startAt + 0.03, maxStart);
+  };
+
+  if (hasStartOffset) {
+    videoElement.addEventListener("loadedmetadata", () => {
+      videoElement.currentTime = restartFrom();
+    });
+
+    videoElement.addEventListener("play", () => {
+      if (videoElement.currentTime < startAt - 0.05) {
+        videoElement.currentTime = restartFrom();
+      }
+    });
+  }
+
+  if (Number.isFinite(playbackRate) && playbackRate > 0 && playbackRate !== 1) {
+    const applyPlaybackRate = () => {
+      videoElement.playbackRate = playbackRate;
+    };
+    applyPlaybackRate();
+    videoElement.addEventListener("loadedmetadata", applyPlaybackRate);
+    videoElement.addEventListener("play", applyPlaybackRate);
+  }
 
   videoElement.addEventListener("timeupdate", () => {
-    if (!Number.isFinite(videoElement.duration) || videoElement.duration <= cutTail + 0.2) return;
-    if (videoElement.currentTime < videoElement.duration - cutTail) return;
+    if (!Number.isFinite(videoElement.duration) || videoElement.duration <= 0.2) return;
 
-    videoElement.currentTime = 0.03;
+    const loopTail = hasCutTail ? cutTail : 0.08;
+    if (videoElement.duration <= loopTail + 0.2) return;
+    if (videoElement.currentTime < videoElement.duration - loopTail) return;
+
+    videoElement.currentTime = restartFrom();
     if (!videoElement.paused) {
       videoElement.play().catch(() => {});
     }
+  });
+
+  videoElement.addEventListener("ended", () => {
+    videoElement.currentTime = restartFrom();
+    videoElement.play().catch(() => {});
   });
 }
 
