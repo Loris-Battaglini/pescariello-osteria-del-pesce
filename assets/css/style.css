@@ -176,16 +176,22 @@ video {
 }
 
 .brand-mark {
-  width: 2.45rem;
+  width: clamp(2.6rem, 5vw, 3.2rem);
   aspect-ratio: 1;
   border-radius: 0.8rem;
   display: grid;
   place-items: center;
-  font-family: "Playfair Display", serif;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #08121e;
-  background: linear-gradient(135deg, #f0e2c8, #c6a77e);
+  overflow: hidden;
+  background: rgba(17, 37, 56, 0.62);
+  border: 1px solid rgba(236, 221, 192, 0.28);
+  padding: 0.2rem;
+}
+
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
 }
 
 .brand-text {
@@ -306,6 +312,7 @@ video {
   z-index: 2;
   width: 100%;
   padding-bottom: clamp(2.8rem, 8vw, 6rem);
+  padding-inline: clamp(0.55rem, 2.5vw, 1.6rem);
 }
 
 .eyebrow {
@@ -323,10 +330,40 @@ video {
   text-wrap: balance;
 }
 
+.hero-title {
+  background: linear-gradient(112deg, #f7edd8 8%, #e5c994 48%, #8fc4f1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 8px 24px rgba(9, 19, 33, 0.38);
+}
+
 .hero-subtitle {
   max-width: 34ch;
   font-size: clamp(1rem, 2.8vw, 1.3rem);
   color: rgba(246, 239, 228, 0.92);
+}
+
+.hero-fish {
+  position: absolute;
+  z-index: 1;
+  width: clamp(84px, 13vw, 180px);
+  opacity: 0.24;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 20px rgba(3, 9, 17, 0.4));
+}
+
+.hero-fish-top {
+  right: clamp(2%, 4vw, 8%);
+  top: calc(var(--header-height) + 3%);
+  transform: rotate(8deg);
+}
+
+.hero-fish-bottom {
+  left: clamp(2%, 5vw, 8%);
+  bottom: clamp(7%, 11vw, 16%);
+  transform: rotate(-10deg);
 }
 
 .hero-actions {
@@ -540,24 +577,26 @@ video {
 
 .experience-list {
   display: grid;
-  gap: 1.2rem;
+  gap: 1rem;
+  max-width: 1010px;
+  margin-inline: auto;
 }
 
 .experience-item {
   display: grid;
   gap: 1rem;
-  padding: 1.1rem;
+  padding: 0.85rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-lg);
+  border-radius: 1.35rem;
   background: linear-gradient(160deg, rgba(24, 45, 67, 0.88), rgba(19, 39, 58, 0.75));
   box-shadow: var(--shadow);
 }
 
 .experience-media {
   margin: 0;
-  border-radius: calc(var(--radius-lg) - 0.5rem);
+  border-radius: 1rem;
   overflow: hidden;
-  min-height: 260px;
+  min-height: 210px;
 }
 
 .experience-media img {
@@ -576,11 +615,12 @@ video {
 }
 
 .experience-copy h3 {
-  font-size: clamp(1.55rem, 4vw, 2.2rem);
+  font-size: clamp(1.34rem, 3.6vw, 1.82rem);
 }
 
 .experience-copy p {
   color: var(--muted);
+  font-size: 0.97rem;
 }
 
 .menu-highlights {
@@ -617,13 +657,14 @@ video {
 .ayce-dedicato::after {
   content: "";
   position: absolute;
-  width: clamp(70px, 10vw, 112px);
-  aspect-ratio: 120 / 70;
+  width: clamp(92px, 14vw, 180px);
+  aspect-ratio: 1;
   pointer-events: none;
-  opacity: 0.18;
+  opacity: 0.2;
   background-repeat: no-repeat;
   background-size: contain;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 70'%3E%3Cpath fill='white' d='M8 35c10-11 27-18 46-18h24l26-14v64L78 53H54C35 53 18 46 8 35Z'/%3E%3Ccircle cx='24' cy='31' r='3.2' fill='%23204f74'/%3E%3Cpath d='M57 20v30M67 20v30M77 20v30' stroke='%23204f74' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("../img/pesci%20no%20background.png");
+  filter: drop-shadow(0 8px 20px rgba(5, 14, 24, 0.3));
 }
 
 .ayce-dedicato::before {
@@ -847,6 +888,41 @@ video {
   gap: 0.9rem;
 }
 
+.booking-info-grid {
+  margin-top: 1.4rem;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.booking-info-card {
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(245, 225, 190, 0.2);
+  background: rgba(20, 40, 60, 0.58);
+}
+
+.booking-info-card h3 {
+  margin-bottom: 0.45rem;
+  font-size: 1.12rem;
+}
+
+.booking-info-card p {
+  color: rgba(229, 233, 239, 0.9);
+  font-size: 0.92rem;
+}
+
+.booking-info-card p + p {
+  margin-top: 0.32rem;
+}
+
+.booking-info-card a {
+  color: #e8d6b3;
+}
+
+.booking-map-card .map-embed {
+  margin-top: 0.5rem;
+}
+
 .btn-whatsapp {
   color: #f6fff7;
   background: linear-gradient(120deg, #138951, #10a560);
@@ -867,9 +943,9 @@ video {
 }
 
 .site-footer {
-  padding: 2.2rem 0 1.6rem;
+  padding: 1.25rem 0;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  background: #102338;
+  background: #0f2235;
 }
 
 .footer-grid {
@@ -957,14 +1033,15 @@ video {
 }
 
 .footer-bottom {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
 }
 
 .footer-bottom p {
   font-size: 0.84rem;
   color: #8f99a7;
+  text-align: center;
 }
 
 .lightbox {
@@ -1055,6 +1132,10 @@ video {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .booking-info-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .footer-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -1064,8 +1145,8 @@ video {
   .experience-item {
     grid-template-columns: 1.04fr 0.96fr;
     align-items: stretch;
-    gap: 1.2rem;
-    padding: 1.15rem;
+    gap: 1rem;
+    padding: 0.9rem;
   }
 
   .experience-item:nth-child(even) .experience-media {
@@ -1086,6 +1167,11 @@ video {
 
   .ayce-media img {
     aspect-ratio: 5 / 6;
+  }
+
+  .booking-info-grid {
+    grid-template-columns: 0.9fr 0.9fr 1.2fr;
+    align-items: start;
   }
 
   .gallery-grid {

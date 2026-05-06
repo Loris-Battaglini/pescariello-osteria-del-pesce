@@ -1,5 +1,6 @@
 const body = document.body;
 const header = document.querySelector(".site-header");
+const heroVideo = document.getElementById("heroVideo");
 const menuToggle = document.querySelector(".menu-toggle");
 const nav = document.querySelector(".site-nav");
 const navLinks = Array.from(document.querySelectorAll(".site-nav a[href^='#']"));
@@ -307,6 +308,51 @@ function setupMobileGalleryCarousel() {
   galleryNext.addEventListener("click", () => handleGalleryStep(1));
 }
 
+function setupHeroVideoPlayback() {
+  if (!heroVideo) return;
+
+  const maxPlays = Number(heroVideo.dataset.maxPlays || "2");
+  if (!Number.isFinite(maxPlays) || maxPlays <= 0) return;
+
+  let completedRuns = 0;
+
+  heroVideo.addEventListener("ended", () => {
+    completedRuns += 1;
+
+    if (completedRuns < maxPlays) {
+      heroVideo.currentTime = 0;
+      heroVideo.play().catch(() => {});
+      return;
+    }
+
+    const freezeTime = Number.isFinite(heroVideo.duration)
+      ? Math.max(0, heroVideo.duration - 0.05)
+      : heroVideo.currentTime;
+
+    heroVideo.currentTime = freezeTime;
+    heroVideo.pause();
+  });
+}
+
+function setupTrimmedVideoLoop(videoElement) {
+  if (!videoElement || videoElement.dataset.trimBound === "true") return;
+
+  const cutTail = Number(videoElement.dataset.cutTail || "0");
+  if (!Number.isFinite(cutTail) || cutTail <= 0) return;
+
+  videoElement.dataset.trimBound = "true";
+
+  videoElement.addEventListener("timeupdate", () => {
+    if (!Number.isFinite(videoElement.duration) || videoElement.duration <= cutTail + 0.2) return;
+    if (videoElement.currentTime < videoElement.duration - cutTail) return;
+
+    videoElement.currentTime = 0.03;
+    if (!videoElement.paused) {
+      videoElement.play().catch(() => {});
+    }
+  });
+}
+
 function setupLazyVideos() {
   if (!lazyVideos.length) return;
 
@@ -317,6 +363,7 @@ function setupLazyVideos() {
     source.src = source.dataset.src;
     videoElement.load();
     videoElement.dataset.loaded = "true";
+    setupTrimmedVideoLoop(videoElement);
   };
 
   if (!("IntersectionObserver" in window)) {
@@ -385,6 +432,7 @@ setupRevealObserver();
 setupGalleryLightbox();
 setupTypedReviews();
 setupMobileGalleryCarousel();
+setupHeroVideoPlayback();
 setupLazyVideos();
 onScroll();
 
