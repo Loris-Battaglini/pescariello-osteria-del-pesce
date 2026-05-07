@@ -926,11 +926,71 @@ video {
   text-align: center;
 }
 
-.booking-hours-text {
-  margin-top: 0.72rem;
-  color: rgba(232, 223, 208, 0.9);
-  font-size: 0.94rem;
-  letter-spacing: 0.01em;
+.booking-hours-card {
+  margin: 0.95rem auto 0;
+  max-width: 40rem;
+  padding: 0.95rem 1rem;
+  border-radius: 0.95rem;
+  border: 1px solid rgba(245, 225, 190, 0.3);
+  background:
+    linear-gradient(165deg, rgba(19, 43, 64, 0.82), rgba(15, 34, 52, 0.86)),
+    radial-gradient(460px circle at 8% 12%, rgba(219, 183, 120, 0.2), transparent 75%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 16px 30px rgba(6, 16, 26, 0.32);
+  text-align: left;
+}
+
+.booking-hours-title {
+  margin: 0 0 0.52rem;
+  font-size: 0.86rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(236, 214, 176, 0.9);
+  font-weight: 700;
+}
+
+.booking-hours-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.booking-hours-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.9rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.11);
+}
+
+.booking-hours-item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.booking-hours-day {
+  color: rgba(246, 239, 227, 0.96);
+  font-weight: 600;
+}
+
+.booking-hours-time {
+  color: rgba(235, 226, 212, 0.9);
+  font-size: 0.93rem;
+  text-align: right;
+}
+
+@media (max-width: 560px) {
+  .booking-hours-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.12rem;
+  }
+
+  .booking-hours-time {
+    text-align: left;
+  }
 }
 
 .booking-actions {
