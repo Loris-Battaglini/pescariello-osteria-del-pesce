@@ -33,6 +33,77 @@ let mobileStepLocked = false;
 let touchStartX = 0;
 let touchStartY = 0;
 let headerIsScrolled = false;
+const desktopVideoQuery = window.matchMedia("(min-width: 980px)");
+const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+const networkConnection =
+  navigator.connection || navigator.mozConnection || navigator.webkitConnection || null;
+
+function addMediaListener(query, callback) {
+  if (!query) return;
+  if (typeof query.addEventListener === "function") {
+    query.addEventListener("change", callback);
+    return;
+  }
+  if (typeof query.addListener === "function") {
+    query.addListener(callback);
+  }
+}
+
+function isVideoModeEnabled() {
+  const saveDataEnabled = Boolean(networkConnection && networkConnection.saveData);
+  return desktopVideoQuery.matches && !reducedMotionQuery.matches && !saveDataEnabled;
+}
+
+function syncVideoModeClass() {
+  const shouldEnable = isVideoModeEnabled();
+  body.classList.toggle("videos-enabled", shouldEnable);
+  body.classList.toggle("videos-disabled", !shouldEnable);
+}
+
+function ensureVideoSource(videoElement) {
+  if (!videoElement) return false;
+  let hasSource = false;
+  const sources = Array.from(videoElement.querySelectorAll("source[data-src]"));
+  sources.forEach((source) => {
+    if (source.src) {
+      hasSource = true;
+      return;
+    }
+    if (!source.dataset.src) return;
+    source.src = source.dataset.src;
+    hasSource = true;
+  });
+
+  if (!hasSource) return false;
+  videoElement.load();
+  return true;
+}
+
+function unloadVideoSource(videoElement) {
+  if (!videoElement) return;
+  videoElement.pause();
+  videoElement.removeAttribute("src");
+  videoElement.removeAttribute("autoplay");
+
+  Array.from(videoElement.querySelectorAll("source")).forEach((source) => {
+    source.removeAttribute("src");
+  });
+
+  videoElement.load();
+}
+
+function removeCinematicSectionOnPhone() {
+  if (!window.matchMedia("(max-width: 759px)").matches) return;
+  const videoSection = document.getElementById("videos");
+  if (videoSection) {
+    videoSection.remove();
+  }
+
+  const videoNavLink = document.querySelector('.site-nav a[href="#videos"]');
+  if (videoNavLink) {
+    videoNavLink.remove();
+  }
+}
 
 function syncBodyLock() {
   const menuOpen = Boolean(nav && nav.classList.contains("is-open"));
@@ -426,8 +497,9 @@ function setupMobileGalleryCarousel() {
 
 function setupHeroVideoPlayback() {
   if (!heroVideo || !heroSection) return;
-  const targetRate = window.matchMedia("(max-width: 759px)").matches ? 0.84 : 0.74;
+  const targetRate = 0.74;
   let hasMarkedReady = false;
+  let heroObserver = null;
 
   const applyRate = () => {
     heroVideo.playbackRate = targetRate;
@@ -445,23 +517,19 @@ function setupHeroVideoPlayback() {
   };
 
   const playHeroVideo = () => {
+    if (!isVideoModeEnabled()) return;
     heroVideo.play().catch(() => {});
   };
 
-  heroVideo.loop = true;
-  applyRate();
-  if (heroVideo.readyState >= 2) {
-    markReady();
-  }
-
   heroVideo.addEventListener("loadedmetadata", applyRate);
   heroVideo.addEventListener("play", applyRate);
-  heroVideo.addEventListener("loadeddata", markReady, { once: true });
-  heroVideo.addEventListener("canplay", markReady, { once: true });
+  heroVideo.addEventListener("loadeddata", markReady);
+  heroVideo.addEventListener("canplay", markReady);
   heroVideo.addEventListener("playing", markReady);
 
-  if ("IntersectionObserver" in window) {
-    const heroObserver = new IntersectionObserver(
+  const observeHeroVisibility = () => {
+    if (heroObserver || !("IntersectionObserver" in window)) return;
+    heroObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
@@ -476,8 +544,49 @@ function setupHeroVideoPlayback() {
       }
     );
     heroObserver.observe(heroSection);
-  } else if (isOnScreen()) {
-    playHeroVideo();
+  };
+
+  const stopHeroObserver = () => {
+    if (!heroObserver) return;
+    heroObserver.disconnect();
+    heroObserver = null;
+  };
+
+  const enableHeroVideo = () => {
+    const sourceLoaded = ensureVideoSource(heroVideo);
+    if (!sourceLoaded) return;
+    heroVideo.loop = true;
+    applyRate();
+    if (heroVideo.readyState >= 2) {
+      markReady();
+    }
+    observeHeroVisibility();
+    if (!heroObserver && isOnScreen()) {
+      playHeroVideo();
+    }
+  };
+
+  const disableHeroVideo = () => {
+    stopHeroObserver();
+    hasMarkedReady = false;
+    heroSection.classList.remove("is-video-ready");
+    unloadVideoSource(heroVideo);
+  };
+
+  const syncHeroVideoMode = () => {
+    syncVideoModeClass();
+    if (isVideoModeEnabled()) {
+      enableHeroVideo();
+      return;
+    }
+    disableHeroVideo();
+  };
+
+  syncHeroVideoMode();
+  addMediaListener(desktopVideoQuery, syncHeroVideoMode);
+  addMediaListener(reducedMotionQuery, syncHeroVideoMode);
+  if (networkConnection && typeof networkConnection.addEventListener === "function") {
+    networkConnection.addEventListener("change", syncHeroVideoMode);
   }
 
   document.addEventListener("visibilitychange", () => {
@@ -486,7 +595,7 @@ function setupHeroVideoPlayback() {
       return;
     }
 
-    if (isOnScreen()) {
+    if (isVideoModeEnabled() && isOnScreen()) {
       playHeroVideo();
     }
   });
@@ -556,52 +665,78 @@ function setupTrimmedVideoLoop(videoElement) {
 }
 
 function setupLazyVideos() {
+  if (!document.getElementById("videos")) return;
   if (!lazyVideos.length) return;
-  const compactViewport = window.matchMedia("(max-width: 759px)").matches;
-  const saveDataEnabled = Boolean(navigator.connection && navigator.connection.saveData);
-  const shouldAutoplay = !(compactViewport && saveDataEnabled);
+  let videoObserver = null;
 
   const loadVideo = (videoElement) => {
     if (videoElement.dataset.loaded === "true") return;
-    const source = videoElement.querySelector("source[data-src]");
-    if (!source) return;
-    source.src = source.dataset.src;
-    videoElement.load();
+    const sourceLoaded = ensureVideoSource(videoElement);
+    if (!sourceLoaded) return;
     videoElement.dataset.loaded = "true";
     setupTrimmedVideoLoop(videoElement);
   };
 
-  if (!("IntersectionObserver" in window)) {
-    lazyVideos.forEach((videoElement) => {
-      loadVideo(videoElement);
-      if (shouldAutoplay) {
+  const disconnectObserver = () => {
+    if (!videoObserver) return;
+    videoObserver.disconnect();
+    videoObserver = null;
+  };
+
+  const enableLazyVideos = () => {
+    if (!isVideoModeEnabled()) return;
+    if (!("IntersectionObserver" in window)) {
+      lazyVideos.forEach((videoElement) => {
+        loadVideo(videoElement);
         videoElement.play().catch(() => {});
-      }
-    });
-    return;
-  }
-
-  const videoObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        const videoElement = entry.target;
-        if (entry.isIntersecting) {
-          loadVideo(videoElement);
-          if (shouldAutoplay) {
-            videoElement.play().catch(() => {});
-          }
-        } else {
-          videoElement.pause();
-        }
       });
-    },
-    {
-      threshold: compactViewport ? 0.18 : 0.35,
-      rootMargin: compactViewport ? "0px 0px 28% 0px" : "0px 0px 12% 0px"
+      return;
     }
-  );
 
-  lazyVideos.forEach((videoElement) => videoObserver.observe(videoElement));
+    disconnectObserver();
+    videoObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const videoElement = entry.target;
+          if (entry.isIntersecting) {
+            loadVideo(videoElement);
+            videoElement.play().catch(() => {});
+          } else {
+            videoElement.pause();
+          }
+        });
+      },
+      {
+        threshold: 0.35,
+        rootMargin: "0px 0px 14% 0px"
+      }
+    );
+    lazyVideos.forEach((videoElement) => videoObserver.observe(videoElement));
+  };
+
+  const disableLazyVideos = () => {
+    disconnectObserver();
+    lazyVideos.forEach((videoElement) => {
+      delete videoElement.dataset.loaded;
+      unloadVideoSource(videoElement);
+    });
+  };
+
+  const syncLazyVideoMode = () => {
+    syncVideoModeClass();
+    if (isVideoModeEnabled()) {
+      enableLazyVideos();
+      return;
+    }
+    disableLazyVideos();
+  };
+
+  syncLazyVideoMode();
+  addMediaListener(desktopVideoQuery, syncLazyVideoMode);
+  addMediaListener(reducedMotionQuery, syncLazyVideoMode);
+  if (networkConnection && typeof networkConnection.addEventListener === "function") {
+    networkConnection.addEventListener("change", syncLazyVideoMode);
+  }
 
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden) return;
@@ -642,6 +777,7 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeMenu();
 });
 
+removeCinematicSectionOnPhone();
 setupRevealObserver();
 setupGalleryLightbox();
 setupTypedReviews();
