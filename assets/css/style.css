@@ -325,19 +325,53 @@ video {
   align-items: flex-end;
   overflow: clip;
   padding-top: var(--header-height);
+  background: #11273e;
+}
+
+.hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-fallback,
+.hero-fallback img {
+  width: 100%;
+  height: 100%;
+}
+
+.hero-fallback img {
+  object-fit: cover;
+  object-position: center 34%;
+  filter: saturate(1.04);
+  transition: opacity 0.75s ease;
 }
 
 .hero-video {
   position: absolute;
   inset: 0;
+  width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center 34%;
+  opacity: 0;
+  transition: opacity 0.95s ease;
+  will-change: opacity;
+}
+
+.hero.is-video-ready .hero-video {
+  opacity: 1;
+}
+
+.hero.is-video-ready .hero-fallback img {
+  opacity: 0;
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
+  z-index: 1;
   background:
     linear-gradient(180deg, rgba(6, 16, 26, 0.08) 0%, rgba(9, 24, 39, 0.4) 54%, rgba(7, 18, 30, 0.64) 100%),
     linear-gradient(115deg, rgba(14, 34, 56, 0.54), rgba(18, 40, 63, 0.18) 50%, rgba(215, 197, 158, 0.16));
@@ -346,6 +380,7 @@ video {
 .hero-glow {
   position: absolute;
   inset: auto auto -28% -10%;
+  z-index: 1;
   width: min(760px, 94vw);
   aspect-ratio: 1;
   border-radius: 50%;
@@ -710,13 +745,16 @@ video {
   overflow: hidden;
   border: 1px solid rgba(249, 232, 200, 0.28);
   box-shadow: var(--shadow);
+  background: rgba(14, 31, 47, 0.55);
 }
 
 .ayce-media img {
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  transform-origin: 50% 56%;
-  animation: ayce-focus 7.2s ease-in-out infinite;
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+  transform: none;
+  animation: none;
 }
 
 .ayce-copy {
@@ -1387,10 +1425,6 @@ video {
     grid-template-columns: 1fr 1fr;
   }
 
-  .ayce-media img {
-    aspect-ratio: 5 / 6;
-  }
-
   .booking-info-grid {
     grid-template-columns: minmax(0, 1fr);
     align-items: start;
@@ -1431,14 +1465,8 @@ video {
 }
 
 @media (max-width: 979px) {
-  .social-proof,
-  .experience,
-  .ayce-dedicato,
-  .gallery,
-  .video-section,
-  .booking-cta {
-    content-visibility: visible;
-    contain-intrinsic-size: auto;
+  :root {
+    --shadow: 0 14px 26px rgba(2, 8, 16, 0.24);
   }
 
   .reveal {
@@ -1450,6 +1478,25 @@ video {
   .site-header.is-scrolled,
   .section-kicker {
     backdrop-filter: none;
+  }
+
+  .proof-badges span,
+  .section-kicker {
+    box-shadow: none;
+  }
+
+  .typed-cursor {
+    display: none;
+  }
+
+  .hero-glow {
+    filter: blur(16px);
+    opacity: 0.68;
+  }
+
+  .ayce-media img {
+    animation: none;
+    transform: none;
   }
 
   .menu-toggle {
@@ -1515,6 +1562,10 @@ video {
 @media (max-width: 759px) {
   body {
     padding-bottom: 4.6rem;
+    background:
+      radial-gradient(800px circle at 90% -15%, rgba(92, 150, 205, 0.12), transparent 65%),
+      linear-gradient(180deg, #132c44 0%, #11283f 45%, #0f2338 100%),
+      var(--bg);
   }
 
   .container {
@@ -1552,6 +1603,7 @@ video {
     position: relative;
     min-height: clamp(270px, 78vw, 500px);
     overflow: hidden;
+    touch-action: pan-y;
   }
 
   .gallery-grid .gallery-item {
@@ -1562,9 +1614,10 @@ video {
     border-radius: 1rem;
     opacity: 0;
     transform: none;
-    transition: none;
+    transition: opacity 0.24s ease;
     pointer-events: none;
     contain: paint;
+    will-change: opacity;
   }
 
   .gallery-grid .gallery-item.is-active {
@@ -1604,14 +1657,25 @@ video {
 
   .floating-wa {
     display: inline-flex;
+    box-shadow: 0 12px 20px rgba(6, 89, 50, 0.32);
   }
 
+  .hero-fallback img,
   .hero-video {
     object-position: center 42%;
   }
 }
 
 @media (hover: none) {
+  .btn:hover,
+  .btn:focus-visible,
+  .social-link:hover,
+  .social-link:focus-visible,
+  .footer-social-link:hover,
+  .footer-social-link:focus-visible {
+    transform: none;
+  }
+
   .experience-item:hover .experience-media img {
     transform: scale(1.01);
   }

@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/img/optimized-webp/hero-fallback-sm.jpg" imagesrcset="assets/img/optimized-webp/hero-fallback-sm.webp 900w, assets/img/optimized-webp/hero-fallback.webp 1600w" imagesizes="100vw" fetchpriority="high">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -43,9 +44,28 @@
 
   <main>
     <section class="hero" id="home">
-      <video class="hero-video" id="heroVideo" autoplay muted loop playsinline preload="metadata">
-        <source src="assets/video/prova enanched cutted.mp4" type="video/mp4">
-      </video>
+      <div class="hero-media" aria-hidden="true">
+        <picture class="hero-fallback">
+          <source
+            srcset="assets/img/optimized-webp/hero-fallback-sm.webp 900w, assets/img/optimized-webp/hero-fallback.webp 1600w"
+            sizes="100vw"
+            type="image/webp">
+          <img
+            src="assets/img/optimized-webp/hero-fallback-sm.jpg"
+            srcset="assets/img/optimized-webp/hero-fallback-sm.jpg 900w, assets/img/optimized-webp/hero-fallback.jpg 1600w"
+            sizes="100vw"
+            alt=""
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            width="1600"
+            height="2131">
+        </picture>
+        <video class="hero-video" id="heroVideo" autoplay muted loop playsinline preload="metadata" poster="assets/img/optimized-webp/hero-fallback-sm.jpg">
+          <source src="assets/video/videoedit.mp4" type="video/mp4" media="(max-width: 759px)">
+          <source src="assets/video/prova enanched cutted.mp4" type="video/mp4">
+        </video>
+      </div>
       <div class="hero-overlay"></div>
       <div class="hero-glow" aria-hidden="true"></div>
 
@@ -138,7 +158,7 @@
         <div class="experience-list">
           <article class="experience-item reveal">
             <figure class="experience-media">
-              <img src="assets/img/optimized/experience-1.jpg" alt="Tavolata ricca di piatti di mare italiani" loading="lazy" decoding="async">
+              <img src="assets/img/optimized-webp/experience-1-sm.webp" srcset="assets/img/optimized-webp/experience-1-sm.webp 900w, assets/img/optimized-webp/experience-1.webp 960w" sizes="(max-width: 759px) calc(100vw - 2.6rem), (max-width: 979px) calc(100vw - 3rem), 46vw" alt="Tavolata ricca di piatti di mare italiani" loading="lazy" decoding="async" width="960" height="1279">
             </figure>
             <div class="experience-copy">
               <h3>Abbondanza pensata per condividere</h3>
@@ -148,7 +168,7 @@
 
           <article class="experience-item reveal">
             <figure class="experience-media">
-              <img src="assets/img/optimized/experience-2.jpg" alt="Dettaglio di piatto crudo premium" loading="lazy" decoding="async">
+              <img src="assets/img/optimized-webp/experience-2-sm.webp" srcset="assets/img/optimized-webp/experience-2-sm.webp 900w, assets/img/optimized-webp/experience-2.webp 960w" sizes="(max-width: 759px) calc(100vw - 2.6rem), (max-width: 979px) calc(100vw - 3rem), 46vw" alt="Dettaglio di piatto crudo premium" loading="lazy" decoding="async" width="960" height="1200">
             </figure>
             <div class="experience-copy">
               <h3>Pesce fresco e ingredienti italiani</h3>
@@ -158,7 +178,7 @@
 
           <article class="experience-item reveal">
             <figure class="experience-media">
-              <img src="assets/img/optimized/experience-3.jpg" alt="Atmosfera serale del locale con tavolo apparecchiato" loading="lazy" decoding="async">
+              <img src="assets/img/optimized-webp/experience-3-sm.webp" srcset="assets/img/optimized-webp/experience-3-sm.webp 900w, assets/img/optimized-webp/experience-3.webp 960w" sizes="(max-width: 759px) calc(100vw - 2.6rem), (max-width: 979px) calc(100vw - 3rem), 46vw" alt="Atmosfera serale del locale con tavolo apparecchiato" loading="lazy" decoding="async" width="960" height="1279">
             </figure>
             <div class="experience-copy">
               <h3>Atmosfera premium ma accessibile</h3>
@@ -191,7 +211,7 @@
     <section class="section ayce-dedicato" id="ayce-dedicato">
       <div class="container ayce-layout">
         <figure class="ayce-media reveal">
-          <img src="assets/img/ayce.jpg" alt="Menu esperienza AYCE dedicata con prezzi" loading="lazy" decoding="async">
+          <img src="assets/img/optimized-webp/ayce-sm.webp" srcset="assets/img/optimized-webp/ayce-sm.webp 900w, assets/img/optimized-webp/ayce.webp 1280w" sizes="(max-width: 979px) calc(100vw - 2.6rem), 42vw" alt="Menu esperienza AYCE dedicata con prezzi" loading="lazy" decoding="async" width="1280" height="1600">
         </figure>
         <article class="ayce-copy reveal">
           <p class="section-kicker">Esperienza AYCE Dedicata</p>
@@ -212,39 +232,39 @@
 
         <div class="gallery-grid">
           <button class="gallery-item is-wide reveal" type="button" data-caption="Tavolata di mare condivisa">
-            <img src="assets/img/pescariello_osteriadipesce_1754047800_3689542999305948376_62580865731.jpg" alt="Tavolata di mare condivisa" loading="lazy" decoding="async">
+            <img src="assets/img/optimized-webp/pescariello_osteriadipesce_1754047800_3689542999305948376_62580865731-sm.webp" srcset="assets/img/optimized-webp/pescariello_osteriadipesce_1754047800_3689542999305948376_62580865731-sm.webp 900w, assets/img/optimized-webp/pescariello_osteriadipesce_1754047800_3689542999305948376_62580865731.webp 1280w" sizes="(max-width: 759px) calc(100vw - 2.6rem), (max-width: 979px) 50vw, 50vw" alt="Tavolata di mare condivisa" loading="lazy" decoding="async" width="1280" height="1705">
           </button>
           <button class="gallery-item reveal" type="button" data-caption="Crudo e selezioni di mare">
-            <img src="assets/img/pescariello_osteriadipesce_1701859710_3251757350766745543_62580865731.jpg" alt="Crudo e selezioni di mare" loading="lazy" decoding="async">
+            <img src="assets/img/optimized-webp/pescariello_osteriadipesce_1701859710_3251757350766745543_62580865731-sm.webp" srcset="assets/img/optimized-webp/pescariello_osteriadipesce_1701859710_3251757350766745543_62580865731-sm.webp 900w, assets/img/optimized-webp/pescariello_osteriadipesce_1701859710_3251757350766745543_62580865731.webp 1080w" sizes="(max-width: 759px) calc(100vw - 2.6rem), (max-width: 979px) 50vw, 25vw" alt="Crudo e selezioni di mare" loading="lazy" decoding="async" width="1080" height="1350">
           </button>
           <button class="gallery-item is-tall reveal" type="button" data-caption="Atmosfera in sala">
-            <img src="assets/img/pescariello_osteriadipesce_1749227400_3649106735260225130_62580865731.jpg" alt="Atmosfera in sala" loading="lazy" decoding="async">
+            <img src="assets/img/optimized-webp/pescariello_osteriadipesce_1749227400_3649106735260225130_62580865731-sm.webp" srcset="assets/img/optimized-webp/pescariello_osteriadipesce_1749227400_3649106735260225130_62580865731-sm.webp 900w, assets/img/optimized-webp/pescariello_osteriadipesce_1749227400_3649106735260225130_62580865731.webp 1280w" sizes="(max-width: 759px) calc(100vw - 2.6rem), (max-width: 979px) 50vw, 25vw" alt="Atmosfera in sala" loading="lazy" decoding="async" width="1280" height="1705">
           </button>
           <button class="gallery-item reveal" type="button" data-caption="Antipasti misti di mare">
-            <img src="assets/img/pescariello_osteriadipesce_1751113800_3664931103418503497_62580865731.jpg" alt="Antipasti misti di mare" loading="lazy" decoding="async">
+            <img src="assets/img/optimized-webp/pescariello_osteriadipesce_1751113800_3664931103418503497_62580865731-sm.webp" srcset="assets/img/optimized-webp/pescariello_osteriadipesce_1751113800_3664931103418503497_62580865731-sm.webp 900w, assets/img/optimized-webp/pescariello_osteriadipesce_1751113800_3664931103418503497_62580865731.webp 1280w" sizes="(max-width: 759px) calc(100vw - 2.6rem), (max-width: 979px) 50vw, 25vw" alt="Antipasti misti di mare" loading="lazy" decoding="async" width="1280" height="1705">
           </button>
           <button class="gallery-item is-tall reveal" type="button" data-caption="Piatto firma dello chef">
-            <img src="assets/img/pescariello_osteriadipesce_1734517838_3525713620358174264_62580865731.jpg" alt="Piatto firma dello chef" loading="lazy" decoding="async">
+            <img src="assets/img/optimized-webp/pescariello_osteriadipesce_1734517838_3525713620358174264_62580865731-sm.webp" srcset="assets/img/optimized-webp/pescariello_osteriadipesce_1734517838_3525713620358174264_62580865731-sm.webp 900w, assets/img/optimized-webp/pescariello_osteriadipesce_1734517838_3525713620358174264_62580865731.webp 1033w" sizes="(max-width: 759px) calc(100vw - 2.6rem), (max-width: 979px) 50vw, 25vw" alt="Piatto firma dello chef" loading="lazy" decoding="async" width="1033" height="1291">
           </button>
           <button class="gallery-item is-wide reveal" type="button" data-caption="Portata di mare in primo piano">
-            <img src="assets/img/pescariello_osteriadipesce_1746090028_3622788187244712790_62580865731.jpg" alt="Portata di mare in primo piano" loading="lazy" decoding="async">
+            <img src="assets/img/optimized-webp/pescariello_osteriadipesce_1746090028_3622788187244712790_62580865731-sm.webp" srcset="assets/img/optimized-webp/pescariello_osteriadipesce_1746090028_3622788187244712790_62580865731-sm.webp 900w, assets/img/optimized-webp/pescariello_osteriadipesce_1746090028_3622788187244712790_62580865731.webp 960w" sizes="(max-width: 759px) calc(100vw - 2.6rem), (max-width: 979px) 50vw, 50vw" alt="Portata di mare in primo piano" loading="lazy" decoding="async" width="960" height="1201">
           </button>
           <button class="gallery-item reveal" type="button" data-caption="Primo di mare della casa">
-            <img src="assets/img/pescariello_osteriadipesce_1762621219_3761461870461050719_62580865731.jpg" alt="Primo di mare della casa" loading="lazy" decoding="async">
+            <img src="assets/img/optimized-webp/pescariello_osteriadipesce_1762621219_3761461870461050719_62580865731-sm.webp" srcset="assets/img/optimized-webp/pescariello_osteriadipesce_1762621219_3761461870461050719_62580865731-sm.webp 900w, assets/img/optimized-webp/pescariello_osteriadipesce_1762621219_3761461870461050719_62580865731.webp 960w" sizes="(max-width: 759px) calc(100vw - 2.6rem), (max-width: 979px) 50vw, 25vw" alt="Primo di mare della casa" loading="lazy" decoding="async" width="960" height="1200">
           </button>
           <button class="gallery-item reveal" type="button" data-caption="Acquario">
-            <img src="assets/img/pescariello_osteriadipesce_1723281000_3431452201735716646_62580865731.jpg" alt="Impiattamento scenografico" loading="lazy" decoding="async">
+            <img src="assets/img/optimized-webp/pescariello_osteriadipesce_1723281000_3431452201735716646_62580865731-sm.webp" srcset="assets/img/optimized-webp/pescariello_osteriadipesce_1723281000_3431452201735716646_62580865731-sm.webp 900w, assets/img/optimized-webp/pescariello_osteriadipesce_1723281000_3431452201735716646_62580865731.webp 1280w" sizes="(max-width: 759px) calc(100vw - 2.6rem), (max-width: 979px) 50vw, 25vw" alt="Impiattamento scenografico" loading="lazy" decoding="async" width="1280" height="1600">
           </button>
           <button class="gallery-item reveal" type="button" data-caption="Dettaglio di pescato fresco">
-            <img src="assets/img/pescariello_osteriadipesce_1701171168_3245981455460297888_62580865731.jpg" alt="Dettaglio di pescato fresco" loading="lazy" decoding="async">
+            <img src="assets/img/optimized-webp/pescariello_osteriadipesce_1701171168_3245981455460297888_62580865731-sm.webp" srcset="assets/img/optimized-webp/pescariello_osteriadipesce_1701171168_3245981455460297888_62580865731-sm.webp 900w, assets/img/optimized-webp/pescariello_osteriadipesce_1701171168_3245981455460297888_62580865731.webp 1080w" sizes="(max-width: 759px) calc(100vw - 2.6rem), (max-width: 979px) 50vw, 25vw" alt="Dettaglio di pescato fresco" loading="lazy" decoding="async" width="1080" height="1350">
           </button>
           <button class="gallery-item is-tall reveal" type="button" data-caption="Specialita di mare della casa">
-            <img src="assets/img/pescariello_osteriadipesce_1750500000_3659781897638765648_62580865731.jpg" alt="Specialita di mare della casa" loading="lazy" decoding="async">
+            <img src="assets/img/optimized-webp/pescariello_osteriadipesce_1750500000_3659781897638765648_62580865731-sm.webp" srcset="assets/img/optimized-webp/pescariello_osteriadipesce_1750500000_3659781897638765648_62580865731-sm.webp 900w, assets/img/optimized-webp/pescariello_osteriadipesce_1750500000_3659781897638765648_62580865731.webp 1280w" sizes="(max-width: 759px) calc(100vw - 2.6rem), (max-width: 979px) 50vw, 25vw" alt="Specialita di mare della casa" loading="lazy" decoding="async" width="1280" height="1705">
           </button>
         </div>
         <div class="gallery-mobile-controls" id="galleryMobileControls" aria-label="Navigazione galleria mobile">
           <button class="gallery-arrow" id="galleryPrev" type="button" aria-label="Immagine precedente">&#10094;</button>
-          <p class="gallery-counter" id="galleryCounter">1 / 12</p>
+          <p class="gallery-counter" id="galleryCounter">1 / 10</p>
           <button class="gallery-arrow" id="galleryNext" type="button" aria-label="Immagine successiva">&#10095;</button>
         </div>
       </div>
@@ -260,7 +280,7 @@
 
         <div class="video-grid">
           <article class="video-card reveal">
-            <video class="teaser-video" data-lazy-video data-cut-tail="5" muted loop playsinline preload="none" poster="assets/img/pescariello_osteriadipesce_1754047800_3689542999305948376_62580865731.jpg">
+            <video class="teaser-video" data-lazy-video data-cut-tail="5" muted loop playsinline preload="none" poster="assets/img/optimized-webp/pescariello_osteriadipesce_1754047800_3689542999305948376_62580865731-sm.webp">
               <source data-src="assets/video/pescariello_osteriadipesce_1757850408_3721441246431745289_62580865731.mp4" type="video/mp4">
             </video>
             <div class="video-copy">
@@ -270,7 +290,7 @@
           </article>
 
           <article class="video-card reveal">
-            <video class="teaser-video" data-lazy-video data-cut-tail="4" muted loop playsinline preload="none" poster="assets/img/pescariello_osteriadipesce_1746090028_3622788187244712790_62580865731.jpg">
+            <video class="teaser-video" data-lazy-video data-cut-tail="4" muted loop playsinline preload="none" poster="assets/img/optimized-webp/pescariello_osteriadipesce_1746090028_3622788187244712790_62580865731-sm.webp">
               <source data-src="assets/video/pescariello_osteriadipesce_1776427040_3877273310585546717_62580865731.mp4" type="video/mp4">
             </video>
             <div class="video-copy">
@@ -280,7 +300,7 @@
           </article>
 
           <article class="video-card reveal">
-            <video class="teaser-video" data-lazy-video data-start-at="6" data-cut-tail="4" muted loop playsinline preload="none" poster="assets/img/pescariello_osteriadipesce_1749227400_3649106735260225130_62580865731.jpg">
+            <video class="teaser-video" data-lazy-video data-start-at="6" data-cut-tail="4" muted loop playsinline preload="none" poster="assets/img/optimized-webp/pescariello_osteriadipesce_1749227400_3649106735260225130_62580865731-sm.webp">
               <source data-src="assets/video/prova1 (1).mp4" type="video/mp4">
             </video>
             <div class="video-copy">
