@@ -259,10 +259,7 @@ function setupTypedReviews() {
 
   if (!reviews.length) return;
 
-  if (
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-    window.matchMedia("(max-width: 979px)").matches
-  ) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     typedReviewText.textContent = reviews[0];
     if (typedCursor) typedCursor.style.display = "none";
     return;
